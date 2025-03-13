@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameActivity">
+
+    <LinearLayout
+        android:id="@+id/playersInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_game_info"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_weight="1"
+
+            >
+
+            <ImageView
+                android:id="@+id/playerImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/e"
+                android:background="@android:color/transparent"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lakshya"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:background="@android:color/transparent"
+
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="O"
+                android:textColor="#00BCD4"
+                android:textSize="50sp"
+                android:background="@android:color/transparent"
+
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="VS"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_game_info"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_weight="1"
+
+            >
+
+            <ImageView
+                android:id="@+id/playerImage2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/j"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eshika"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:background="@android:color/transparent"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:textColor="#E91E63"
+                android:background="@android:color/transparent"
+                android:textSize="50sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <com.pachkhede.tictactoeonline.TicTacToeView
+        app:layout_constraintTop_toBottomOf="@id/playersInfo"
+        android:id="@+id/ticTacToeView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_margin="20dp"
+
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ticTacToeView"
+        android:gravity="center_vertical"
+        android:layout_marginTop="50dp"
+        android:paddingHorizontal="20dp"
+        >
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/back"
+            android:background="@drawable/image_button_back"
+            android:padding="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+
+        <ImageView
+            android:id="@+id/reset"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/reset"
+            android:background="@drawable/image_button_back"
+            android:padding="10dp"
+            android:foreground="?attr/selectableItemBackground"
+
+            />
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
