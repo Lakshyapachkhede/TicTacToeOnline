@@ -30,7 +30,7 @@
             >
 
             <ImageView
-                android:id="@+id/playerImage"
+                android:id="@+id/playerImage1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@android:color/transparent"
@@ -39,6 +39,7 @@
                 />
 
             <TextView
+                android:id="@+id/playerName1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -95,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="Player"
+                android:text="Player2"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="20sp" />

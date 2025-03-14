@@ -15,16 +15,34 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ProfileSelectDialog(val list : List<Int>) : DialogFragment() {
+
+class ProfileSelectDialog(val list: List<Int>) : DialogFragment() {
+
+    companion object {
+        val defaultList = mutableListOf(
+            R.drawable.a,
+            R.drawable.b,
+            R.drawable.c,
+            R.drawable.d,
+            R.drawable.e,
+            R.drawable.f,
+            R.drawable.g,
+            R.drawable.h,
+            R.drawable.i,
+            R.drawable.j
+        )
+
+
+    }
 
     interface InputListener {
-        fun sendInput(name: String, img : Int)
+        fun sendInput(name: String, img: Int)
 
     }
 
     private var inputListener: InputListener? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let{
+        return activity?.let {
             val builder = AlertDialog.Builder(it)
 
             val inflater = requireActivity().layoutInflater
@@ -35,7 +53,8 @@ class ProfileSelectDialog(val list : List<Int>) : DialogFragment() {
 
             val imageRecyclerView = view.findViewById<RecyclerView>(R.id.imageSelectRecyclerView)
             val adapter = ImageSelectAdapter(requireContext(), list)
-            imageRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            imageRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             imageRecyclerView.adapter = adapter
 
             val cancelButton = view.findViewById<Button>(R.id.buttonCancel)
@@ -47,10 +66,10 @@ class ProfileSelectDialog(val list : List<Int>) : DialogFragment() {
             okButton.setOnClickListener {
                 val name: String = nameEditText.text.toString().trim()
 
-                if (name == ""){
+                if (name == "") {
                     nameEditText.error = "Name cannot be empty"
 
-                }else{
+                } else {
                     val selectedImage = adapter.selectedImage
                     Toast.makeText(context, "$name, $selectedImage", Toast.LENGTH_SHORT).show()
                     inputListener?.sendInput(name, selectedImage)
@@ -68,12 +87,12 @@ class ProfileSelectDialog(val list : List<Int>) : DialogFragment() {
             builder.create()
 
 
-        }?: throw IllegalStateException("Activity cannot be null")
+        } ?: throw IllegalStateException("Activity cannot be null")
 
 
     }
 
-    override fun onAttach(context : Context) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         try {
@@ -82,7 +101,7 @@ class ProfileSelectDialog(val list : List<Int>) : DialogFragment() {
             if (inputListener == null) {
                 throw ClassCastException("$context must implement InputListener")
             }
-        } catch (e:ClassCastException){
+        } catch (e: ClassCastException) {
             Toast.makeText(context, "input listener error", Toast.LENGTH_SHORT).show()
         }
 

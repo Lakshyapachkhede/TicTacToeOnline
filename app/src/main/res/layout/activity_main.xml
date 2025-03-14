@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,6 @@
             android:paddingStart="30dp"
             android:paddingTop="20dp"
             android:paddingEnd="30dp"
-            android:paddingBottom="20dp"
             android:background="@android:color/transparent"
 
             >
@@ -83,13 +82,14 @@
         android:gravity="center"
         android:orientation="vertical"
         android:layout_marginTop="60dp"
+        android:paddingHorizontal="60dp"
         app:layout_constraintTop_toBottomOf="@id/title"
         >
 
         <Button
             android:id="@+id/btnTwoPlayer"
             style="@style/ButtonMain"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#03A9F4"
             android:text="Two Players"
@@ -99,7 +99,8 @@
         <Button
             android:id="@+id/btnVsComputer"
             style="@style/ButtonMain"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+
             android:layout_height="wrap_content"
             android:backgroundTint="#673AB7"
             android:layout_marginTop="30dp"
@@ -110,7 +111,7 @@
 
         <Button
             android:id="@+id/btnOnline"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             style="@style/ButtonMain"
@@ -121,5 +122,59 @@
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="60dp"
+        app:layout_constraintTop_toBottomOf="@id/buttons">
+
+        <ImageView
+            android:id="@+id/user"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/image_button_back"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="10dp"
+            android:src="@drawable/user"
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/rate"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/image_button_back"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="10dp"
+            android:src="@drawable/star"
+
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/image_button_back"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="10dp"
+            android:src="@drawable/share"
+
+            />
+
+
+    </LinearLayout>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

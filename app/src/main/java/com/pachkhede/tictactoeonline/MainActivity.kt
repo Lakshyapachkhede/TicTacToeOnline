@@ -1,14 +1,16 @@
 package com.pachkhede.tictactoeonline
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -19,11 +21,28 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<Button>(R.id.btnTwoPlayer).setOnClickListener{
+        findViewById<Button>(R.id.btnTwoPlayer).setOnClickListener {
             val intent = Intent(this@MainActivity, GameActivity::class.java)
             startActivity(intent)
         }
 
+        findViewById<ImageView>(R.id.user).setOnClickListener {
+            val dialog = ProfileSelectDialog(ProfileSelectDialog.defaultList)
+            dialog.show(supportFragmentManager, "Update Profile")
+        }
+
 
     }
+
+    override fun sendInput(name: String, img: Int) {
+        val sharedPref = getSharedPreferences(getString(R.string.shared_pref_main),Context.MODE_PRIVATE)
+
+        with(sharedPref.edit()) {
+            putString(getString(R.string.profileName), name)
+            putInt(getString(R.string.profileImg), img)
+            commit()
+        }
+    }
+
+
 }

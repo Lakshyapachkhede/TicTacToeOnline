@@ -1,6 +1,7 @@
 package com.pachkhede.tictactoeonline
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -56,26 +57,17 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
 
         findViewById<LinearLayout>(R.id.playerInfo2).setOnClickListener {
-            val list = List<Int>(10){(0)}.toMutableList()
-            list[0] = R.drawable.a
-            list[1] = R.drawable.b
-            list[2] = R.drawable.c
-            list[3] = R.drawable.d
-            list[4] = R.drawable.e
-            list[5] = R.drawable.f
-            list[6] = R.drawable.g
-            list[7]= R.drawable.h
-            list[8] = R.drawable.i
-            list[9] = R.drawable.j
-
-            val dialog = ProfileSelectDialog(list)
+            val dialog = ProfileSelectDialog(ProfileSelectDialog.defaultList)
             dialog.show(supportFragmentManager, "update profile")
 
         }
 
+        val sharedPref = getSharedPreferences(getString(R.string.shared_pref_main), Context.MODE_PRIVATE)
+        val name = sharedPref.getString(getString(R.string.profileName), "Player1")
+        val img = sharedPref.getInt(getString(R.string.profileImg), R.drawable.a)
 
-
-
+        findViewById<ImageView>(R.id.playerImage1).setImageResource(img)
+        findViewById<TextView>(R.id.playerName1).text = name
 
     }
 
