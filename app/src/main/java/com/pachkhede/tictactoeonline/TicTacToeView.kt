@@ -14,9 +14,15 @@ import android.widget.Toast
 import androidx.core.graphics.toColorInt
 
 class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    private val O = 0
-    private val X = 1
-    private val Empty = -1
+
+    var onTurnChange : ((Int) -> Unit)? = null
+    var onGameWin : ((Int) -> Unit)? = null
+
+
+    val O = 0
+    val X = 1
+    val Empty = -1
+    val Draw = 2
 
     private var turn = X
 
@@ -156,7 +162,7 @@ class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, attrs
     }
 
 
-    fun setAt(idx: Int, isX: Boolean) {
+    private fun setAt(idx: Int, isX: Boolean) {
         if (board[idx] == Empty) {
             board[idx] = if (isX) X else O
         }
@@ -228,14 +234,26 @@ class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, attrs
         points.forEachIndexed { i, point ->
             if (x in point.first.x..point.second.x && y in point.first.y..point.second.y) {
                 setAt(i, turn == X)
-                turn = if (turn == X) O else X
+
 
                 val (win, pos) = checkWin()
-                if (win != Empty) {
+
+                if (win == Draw) {
+                    onGameWin?.invoke(Draw)
+                }
+
+                else if (win != Empty){
                     isWon = true
                     winLineIdx = pos
                     winner = win
+                    onGameWin?.invoke(winner)
                 }
+
+                else  {
+                    turn = if (turn == X) O else X
+                    onTurnChange?.invoke(turn)
+                }
+
 
                 invalidate()
             }
@@ -246,26 +264,38 @@ class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, attrs
 
 
     // Returns win player and index in winCombinations
-    fun checkWin(): Pair<Int, Int> {
+    private fun checkWin(): Pair<Int, Int> {
         for (i in winCombinations.indices) {
             val (a, b, c) = winCombinations[i]
             if (board[a] != -1 && board[a] == board[b] && board[b] == board[c]) {
                 return if (board[a] == O) Pair(O,i) else Pair(X,i)
             }
         }
+        var draw = true
+        for (i in board){
+            if (i == Empty){
+                draw = false
+                break
+            }
+        }
+        if (draw) {
+            return Pair(Draw, Draw)
+        }
         return Pair(Empty, Empty) // No winner yet
     }
 
 
 
-    fun reset(){
+
+    fun reset() {
         board = IntArray(9) { Empty }
         turn = X
         winner = -1
         isWon = false
         winLineIdx = -1
+        onTurnChange?.invoke(turn)
+        onGameWin?.invoke(Empty)
         invalidate()
-
     }
 
 }
