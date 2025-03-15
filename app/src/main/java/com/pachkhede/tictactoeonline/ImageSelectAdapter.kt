@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 class ImageSelectAdapter(private val context : Context, val list : List<Int>) : RecyclerView.Adapter<ImageSelectAdapter.ImageSelectViewHolder>(){
     var selectedItem: Int = 0
-    val selectedImage get() = list[selectedItem]
+    val selectedImage get() = context.resources.getResourceEntryName(list[selectedItem])
     class ImageSelectViewHolder(itemView: View) : ViewHolder(itemView){
         val imageView: ImageView = itemView.findViewById<ImageView>(R.id.imageSelectOption)
 

@@ -26,20 +26,33 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
             startActivity(intent)
         }
 
+
+        findViewById<Button>(R.id.btnOnline).setOnClickListener {
+//            val intent = Intent(this@MainActivity, GameOnlineActivity::class.java)
+//            startActivity(intent)
+
+            val dialog = RoomCreateJoinDialog()
+            dialog.show(supportFragmentManager, "Create or join Room")
+
+        }
+
         findViewById<ImageView>(R.id.user).setOnClickListener {
             val dialog = ProfileSelectDialog(ProfileSelectDialog.defaultList)
             dialog.show(supportFragmentManager, "Update Profile")
         }
 
 
+
+
+
     }
 
-    override fun sendInput(name: String, img: Int) {
+    override fun sendInput(name: String, img: String) {
         val sharedPref = getSharedPreferences(getString(R.string.shared_pref_main),Context.MODE_PRIVATE)
 
         with(sharedPref.edit()) {
             putString(getString(R.string.profileName), name)
-            putInt(getString(R.string.profileImg), img)
+            putString(getString(R.string.profileImg), img)
             commit()
         }
     }

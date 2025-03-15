@@ -36,7 +36,7 @@ class ProfileSelectDialog(val list: List<Int>) : DialogFragment() {
     }
 
     interface InputListener {
-        fun sendInput(name: String, img: Int)
+        fun sendInput(name: String, img: String)
 
     }
 

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/createLayoutButton"
+            style="@style/ButtonTopJoinDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorX"
+            android:text="Create"
+            android:textSize="16sp"
+            />
+
+        <Button
+            android:id="@+id/joinLayoutButton"
+            style="@style/ButtonTopJoinDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorO"
+            android:text="Join"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+
+<!--    Room Create layout-->
+    <LinearLayout
+        android:id="@+id/createLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:padding="20dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/roomCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Id: 323232"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/share"
+                android:background="@drawable/image_button_back"
+                />
+
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share this room id with your friends and ask them to join"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            />
+
+        <LinearLayout
+            android:id="@+id/playersInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/player_game_info"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/playerImage1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/e"
+
+                    />
+
+                <TextView
+                    android:id="@+id/playerName1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Lakshya"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+
+                    android:text="X"
+                    android:textColor="#E91E63"
+                    android:textSize="50sp"
+
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="VS"
+                android:textColor="@color/black"
+                android:textSize="50sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/playerInfo2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/player_game_info"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/playerImage2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/j" />
+
+                <TextView
+                    android:id="@+id/playerName2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Player2"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/loadingGif"
+                    android:layout_width="80dp"
+                    android:layout_height="90dp"
+                    android:src="@drawable/loading"
+                    android:visibility="gone"
+                    />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="O"
+                    android:textColor="#00BCD4"
+                    android:textSize="50sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--    Room Create End-->
+
+
+<!--    This is for joining-->
+
+    <LinearLayout
+        android:id="@+id/joinLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter Room Id"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <EditText
+            android:id="@+id/inputRoomIdEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/name_input"
+            android:hint="Enter room id here"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <!--    joining ends-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        >
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="@style/ButtonMain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorX"
+            android:text="Cancel"
+            android:textSize="16sp"
+
+            />
+
+        <Button
+            android:id="@+id/buttonOk"
+            style="@style/ButtonMain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorO"
+            android:text="Done"
+            android:textSize="16sp"
+
+
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

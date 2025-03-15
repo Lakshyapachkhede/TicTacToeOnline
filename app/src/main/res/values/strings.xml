@@ -3,5 +3,6 @@
     <string name="profileName">profileName</string>
     <string name="profileImg">profileImg</string>
     <string name="shared_pref_main">com.pachkhede.tictactoeonline.main_activity</string>
+    <string name="serverUrl">http://localhost:3000/</string>
 
 </resources>

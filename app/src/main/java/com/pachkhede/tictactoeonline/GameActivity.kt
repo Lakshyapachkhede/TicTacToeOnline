@@ -64,16 +64,19 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
         val sharedPref = getSharedPreferences(getString(R.string.shared_pref_main), Context.MODE_PRIVATE)
         val name = sharedPref.getString(getString(R.string.profileName), "Player1")
-        val img = sharedPref.getInt(getString(R.string.profileImg), R.drawable.a)
+        val img = sharedPref.getString(getString(R.string.profileImg), "a")
 
-        findViewById<ImageView>(R.id.playerImage1).setImageResource(img)
+        val imgId = resources.getIdentifier(img, "drawable", packageName)
+
+        findViewById<ImageView>(R.id.playerImage1).setImageResource(imgId)
         findViewById<TextView>(R.id.playerName1).text = name
 
     }
 
-    override fun sendInput(name: String, img: Int) {
+    override fun sendInput(name: String, img: String) {
         findViewById<TextView>(R.id.playerName2).text = name
-        findViewById<ImageView>(R.id.playerImage2).setImageResource(img)
+        val imgId = resources.getIdentifier(img, "drawable", packageName)
+        findViewById<ImageView>(R.id.playerImage2).setImageResource(imgId)
 
     }
 
