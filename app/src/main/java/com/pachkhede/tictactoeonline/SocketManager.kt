@@ -17,7 +17,7 @@ object SocketManager {
 
     init {
         try {
-            socket = IO.socket("http://192.168.32.212:3000/")
+            socket = IO.socket("http://192.168.99.37:3000/")
             setupListener()
         } catch (e: URISyntaxException) {
             e.printStackTrace()

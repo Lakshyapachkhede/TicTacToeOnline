@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:text="Lakshya"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="20sp"
 

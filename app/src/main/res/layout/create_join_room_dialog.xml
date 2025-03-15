@@ -57,7 +57,7 @@
                 android:id="@+id/roomCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Room Id: 323232"
+                android:text="Connecting"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:gravity="center_vertical"

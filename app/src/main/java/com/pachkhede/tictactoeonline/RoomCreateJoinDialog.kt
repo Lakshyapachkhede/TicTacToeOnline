@@ -46,6 +46,7 @@ class RoomCreateJoinDialog : DialogFragment() {
 
 
             SocketManager.connect { success ->
+
                 if (success) {
 
 
@@ -55,14 +56,20 @@ class RoomCreateJoinDialog : DialogFragment() {
                     SocketManager.setRoomCreatedListener { id ->
                         activity?.runOnUiThread {
                             view?.findViewById<TextView>(R.id.roomCode)?.text = ("Room Id: " + id)
+
                         }
                     }
 
                     SocketManager.createRoom()
 
                     SocketManager.setRoomJoinedListener { name, img ->
-                        setPlayer2Info(name, img)
+                        activity?.runOnUiThread {
+                            if (isCreateLayoutOpen) {
+                                setPlayer2Info(name, img)
+                            }
+                        }
                     }
+
                 } else {
                     activity?.runOnUiThread {
                         view?.findViewById<TextView>(R.id.roomCode)?.text = ("Error Connecting")
@@ -107,12 +114,6 @@ class RoomCreateJoinDialog : DialogFragment() {
 
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        SocketManager.disconnect()
-
-    }
-
     private fun showCreateLayout() {
         isCreateLayoutOpen = true
         view?.findViewById<LinearLayout>(R.id.createLayout)?.visibility = View.VISIBLE
@@ -153,10 +154,8 @@ class RoomCreateJoinDialog : DialogFragment() {
 
     }
 
-
-    private fun joinRoom() {
-
+    override fun onDestroy() {
+        super.onDestroy()
+        SocketManager.disconnect()
     }
-
-
 }
