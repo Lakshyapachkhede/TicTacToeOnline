@@ -50,7 +50,7 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private val borderPaint = Paint(paint).apply { strokeWidth = 20f }
-    private val padding = 30;
+    private val padding = 15;
     private var rw = 0f
 
     private val points = mutableListOf<Pair<PointF, PointF>>()

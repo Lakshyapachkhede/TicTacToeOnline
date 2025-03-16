@@ -13,10 +13,12 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="20dp"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gameInfoTextView"
+        >
 
         <LinearLayout
             android:layout_width="0dp"
@@ -51,15 +53,12 @@
                 />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@android:color/transparent"
-
-                android:text="X"
-                android:textColor="#E91E63"
-                android:textSize="50sp"
-
+                android:src="@drawable/x"
+                android:layout_marginTop="10dp"
                 />
         </LinearLayout>
 
@@ -103,13 +102,14 @@
                 android:textSize="20sp" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:text="O"
-                android:textColor="#00BCD4"
-                android:textSize="50sp" />
+                android:src="@drawable/o"
+                android:layout_marginTop="10dp"
+                />
         </LinearLayout>
 
     </LinearLayout>
@@ -125,6 +125,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/playersInfo"
+        app:layout_constraintBottom_toTopOf="@id/ticTacToeView"
         android:background="@drawable/name_input"
         android:paddingVertical="10dp"
         android:paddingHorizontal="20dp"
@@ -140,18 +141,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gameInfoTextView"
-
+        app:layout_constraintBottom_toTopOf="@id/bottomButtons"
         />
 
 
     <LinearLayout
+        android:id="@+id/bottomButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@id/ticTacToeView">
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@id/ticTacToeView"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/back"

@@ -19,7 +19,8 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
     val O = 0
     val X = 1
     val Empty = -1
-
+    var turn = X
+    var player = X
 
     private val path = Path()
     private val paint = Paint().apply {
@@ -44,11 +45,11 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
     }
 
     private val borderPaint = Paint(paint).apply { strokeWidth = 20f }
-    private val padding = 30;
+    private val padding = 15;
     private var rw = 0f
 
     private val points = mutableListOf<Pair<PointF, PointF>>()
-    private var board = IntArray(9) { Empty }
+    var board = IntArray(9) { Empty }
 
     private val winCombinations = arrayOf(
         intArrayOf(0, 1, 2), // Row 1
@@ -70,6 +71,10 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
 
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        if (player != turn){
+            return true
+        }
 
         if (event?.action != MotionEvent.ACTION_DOWN) {
             return true

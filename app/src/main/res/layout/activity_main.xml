@@ -14,19 +14,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/buttons"
         >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="30dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="30dp"
             android:background="@android:color/transparent"
 
             >
@@ -81,9 +78,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginTop="60dp"
         android:paddingHorizontal="60dp"
         app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/roundButtons"
         >
 
         <Button
@@ -103,7 +100,7 @@
 
             android:layout_height="wrap_content"
             android:backgroundTint="#673AB7"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
 
             android:text="Vs Computer"
 
@@ -113,7 +110,7 @@
             android:id="@+id/btnOnline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             style="@style/ButtonMain"
             android:backgroundTint="#E91E63"
             android:text="Play Online"
@@ -124,13 +121,15 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/roundButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="60dp"
-        app:layout_constraintTop_toBottomOf="@id/buttons">
+        app:layout_constraintTop_toBottomOf="@id/buttons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
         <ImageView
             android:id="@+id/user"

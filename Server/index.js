@@ -14,8 +14,8 @@ const io = new Server(server, {
 });
 
 
-users = {} // users[socket.id] = {name:"abc", image:"a", mark:"X"}
-rooms = {} // rooms[room.id] = {player1 = socket.id, player2= socket.id, board = ["X", "O", ...], turn = ""}
+users = {} // users[socket.id] = {name:"abc", image:"a", mark:"x"}
+rooms = {} // rooms[room.id] = {player1 = socket.id, player2= socket.id, board = ["x", "o", ...], turn = ""}
 
 usersOnline = 0;
 
@@ -40,30 +40,38 @@ io.on("connection", (socket) => {
 
     socket.on("create_room", () => {
         const id = crypto.randomBytes(3).toString('hex');
-        users[socket.id].mark= "X";
-        rooms[id] = { player1: socket.id,player2:null, board: [], turn: "X" };
+        users[socket.id].mark = "x";
+        rooms[id] = { player1: socket.id, player2: null, board: [], turn: "x" };
         socket.join(id);
-        console.log("room created by" ,users[socket.id]);
+        console.log("room created by", users[socket.id]);
         console.log("room id by", users[socket.id].name, "is", id)
 
-        io.to(id).emit("room_created", {id:id});
+        io.to(id).emit("room_created", { id: id });
     });
 
 
     socket.on("join_room", (data) => {
         let id = data.id
-        console.log("room join id by", users[socket.id].name, "is", id)
-        if (rooms[id].player2 == null) {
-            users[socket.id].mark = "O";
-            rooms[id].player2 = socket.id;
+        if (rooms[id] == undefined) {
+            io.to(socket.id).emit("error", { "error": "Room id is invalid", "event":"join_room" })
 
-            socket.join(id);
+        }       
+        else {
+            console.log("room join id by", users[socket.id].name, "is", id)
+            if (rooms[id].player2 == null) {
+                users[socket.id].mark = "o";
+                rooms[id].player2 = socket.id;
 
-            console.log("room joined by" ,users[socket.id]);
-            console.log(rooms[id])
-            
-            io.to(id).emit("user_joined", users[socket.id]);
-            // socket.to(id).emit("start_game", rooms[id]);
+                socket.join(id);
+
+                console.log("room joined by", users[socket.id]);
+                console.log(rooms[id])
+
+                io.to(id).emit("user_joined", users[socket.id]);
+                let data = {"player1":{id:rooms[id].player1, ...users[rooms[id].player1]}, "player2":{id:rooms[id].player2, ...users[rooms[id].player2]}}
+                console.log(data);
+                io.to(id).emit("start_game", data);
+            }
         }
     });
 
@@ -72,7 +80,7 @@ io.on("connection", (socket) => {
         room = rooms[id]
         if (room[board][index] == undefined) {
             room[board][index] = room[turn];
-            room[turn] = (room[turn] == "X") ? "O" : "X";
+            room[turn] = (room[turn] == "x") ? "o" : "x";
             socket.to(id).emit("move_played", (room))
         }
     });
@@ -84,6 +92,8 @@ io.on("connection", (socket) => {
         usersOnline = usersOnline - 1;
         console.log(usersOnline);
 
+        
+
 
     });
 
@@ -94,11 +104,11 @@ io.on("connection", (socket) => {
 
 
 
+const IP = "192.168.110.37"
 
+server.listen(3000, IP, () => {
 
-server.listen(3000, "192.168.99.37", () => {
-
-    console.log("server running at 192.168.99.37:3000");
+    console.log(`server running at ${IP}:3000`);
 
 });
 

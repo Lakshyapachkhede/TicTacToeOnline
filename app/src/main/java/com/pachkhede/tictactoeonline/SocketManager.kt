@@ -17,7 +17,7 @@ object SocketManager {
 
     init {
         try {
-            socket = IO.socket("http://192.168.99.37:3000/")
+            socket = IO.socket("http://192.168.110.37:3000/")
             setupListener()
         } catch (e: URISyntaxException) {
             e.printStackTrace()
@@ -89,6 +89,31 @@ object SocketManager {
             onRoomJoined(name, img)
         }
     }
+
+
+    fun setErrorListener(onError: (String, String) -> Unit){
+        socket?.on("error") { args->
+            val data = args[0] as JSONObject
+            val error = data.getString("error")
+            val event = data.getString("event")
+            onError(error, event)
+
+        }
+    }
+
+    fun setGameStartListener(onGameStart :(JSONObject)->Unit){
+        socket?.on("start_game") { args->
+            val data = args[0] as JSONObject
+            onGameStart(data);
+        }
+    }
+
+
+    fun getSocketId(): String = socket?.id() ?: ""
+
+
+
+
 
 
 }
