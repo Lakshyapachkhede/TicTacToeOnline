@@ -2,6 +2,7 @@ const { Server } = require("socket.io");
 const http = require("http");
 const express = require("express");
 const crypto = require("crypto");
+require("dotenv").config()
 
 const app = express();
 const server = http.createServer(app);
@@ -181,11 +182,11 @@ io.on("connection", (socket) => {
 
 
 
-const IP = "192.168.30.37"
+const PORT = process.env.PORT || 3000
 
-server.listen(3000, IP, () => {
+server.listen(PORT, () => {
 
-    console.log(`server running at ${IP}:3000`);
+    console.log(`server running at ${PORT}`);
 
 });
 
