@@ -8,23 +8,24 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import org.json.JSONObject
 import java.net.URISyntaxException
+import java.util.Locale
 
 object SocketManager {
 
     private var socket: Socket? = null
     private var isConnected = false
-    private var connectionCallback : ((Boolean) -> Unit)? = null
+    private var connectionCallback: ((Boolean) -> Unit)? = null
 
     init {
         try {
-            socket = IO.socket("http://192.168.110.37:3000/")
+            socket = IO.socket("http://192.168.30.37:3000/")
             setupListener()
         } catch (e: URISyntaxException) {
             e.printStackTrace()
         }
     }
 
-    private fun setupListener(){
+    private fun setupListener() {
         socket?.on(Socket.EVENT_CONNECT) {
             isConnected = true
             connectionCallback?.invoke(true)
@@ -40,7 +41,7 @@ object SocketManager {
         }
     }
 
-    fun connect(callback : (Boolean)->Unit) {
+    fun connect(callback: (Boolean) -> Unit) {
         connectionCallback = callback
         socket?.connect()
     }
@@ -91,8 +92,8 @@ object SocketManager {
     }
 
 
-    fun setErrorListener(onError: (String, String) -> Unit){
-        socket?.on("error") { args->
+    fun setErrorListener(onError: (String, String) -> Unit) {
+        socket?.on("error") { args ->
             val data = args[0] as JSONObject
             val error = data.getString("error")
             val event = data.getString("event")
@@ -101,8 +102,8 @@ object SocketManager {
         }
     }
 
-    fun setGameStartListener(onGameStart :(JSONObject)->Unit){
-        socket?.on("start_game") { args->
+    fun setGameStartListener(onGameStart: (JSONObject) -> Unit) {
+        socket?.on("start_game") { args ->
             val data = args[0] as JSONObject
             onGameStart(data);
         }
@@ -111,9 +112,67 @@ object SocketManager {
 
     fun getSocketId(): String = socket?.id() ?: ""
 
+    fun playMove(roomId: String, i: Int, player: String) {
+        val json = JSONObject()
+        json.put("id", roomId)
+        json.put("index", i)
+        json.put("player", player.lowercase())
+
+        socket?.emit("play_move", json)
+
+    }
+
+    fun setMovePlayedListener(onMovePlayed: (Int, String) -> Unit) {
+        socket?.on("move_played") { args ->
+            val data = args[0] as JSONObject
+
+            val index = data.getString("index").toInt()
+            val player = data.getString("player").toString().uppercase()
+
+            onMovePlayed(index, player)
 
 
+        }
+    }
 
+
+    fun setWinListener(onWin: (String, Int, Int) -> Unit) {
+        socket?.on("win") { args ->
+            val data = args[0] as JSONObject
+            val player = data.getString("winner").uppercase()
+            val start = data.getInt("start")
+            val end = data.getInt("end")
+
+            onWin(player, start, end)
+
+        }
+    }
+
+    fun reset(id: String) {
+        socket?.emit("reset", id)
+    }
+
+    fun setResetListener(onReset: () -> Unit) {
+        socket?.on("reset") {
+            onReset()
+        }
+    }
+
+
+    fun setGameDrawListener(onGameDraw: () -> Unit) {
+        socket?.on("draw") {
+            onGameDraw()
+        }
+    }
+
+
+    fun setUserDisconnectListener(onDisconnect: (JSONObject) -> Unit) {
+        socket?.on("user_disconnect") { args ->
+            val data = args[0] as JSONObject
+            onDisconnect(data)
+
+        }
+    }
 
 
 }

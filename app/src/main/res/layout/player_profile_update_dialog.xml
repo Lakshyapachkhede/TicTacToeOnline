@@ -29,6 +29,7 @@
             android:hint="Enter your name"
             android:textColor="@color/black"
             android:textSize="20sp"
+            android:maxLength="10"
             android:background="@drawable/name_input"
             android:padding="10dp"
             />

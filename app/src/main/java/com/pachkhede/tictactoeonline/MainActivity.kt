@@ -28,10 +28,8 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
 
 
         findViewById<Button>(R.id.btnOnline).setOnClickListener {
-//            val intent = Intent(this@MainActivity, GameOnlineActivity::class.java)
-//            startActivity(intent)
-
             val dialog = RoomCreateJoinDialog()
+            dialog.isCancelable = false
             dialog.show(supportFragmentManager, "Create or join Room")
 
         }

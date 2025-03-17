@@ -137,6 +137,7 @@ class RoomCreateJoinDialog : DialogFragment() {
                         view?.findViewById<EditText>(R.id.inputRoomIdEditText)?.error =
                             "cannot join a room created by self"
                     } else {
+                        roomId = id
                         SocketManager.joinRoom(id)
 
                     }
@@ -154,7 +155,7 @@ class RoomCreateJoinDialog : DialogFragment() {
                 val intent = Intent(Intent.ACTION_SEND)
 
                 val text =
-                    "Lets play TicTacToe. Download from https://play.google.com. Start game and go to play online and join room using this code ${roomId}d"
+                    "Lets play TicTacToe. Download from https://play.google.com. Start game and go to play online and join room using this code ${roomId}"
 
                 intent.type = "text/plain"
 
@@ -211,5 +212,7 @@ class RoomCreateJoinDialog : DialogFragment() {
         view?.findViewById<ImageView>(R.id.playerImage1)?.setImageResource(imgId)
 
     }
+
+
 
 }

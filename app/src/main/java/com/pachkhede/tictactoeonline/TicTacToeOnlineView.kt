@@ -1,5 +1,6 @@
 package com.pachkhede.tictactoeonline
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.toColorInt
@@ -14,13 +16,11 @@ import androidx.core.graphics.toColorInt
 class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
     View(context, attributeSet) {
 
-    var cellTouched : ((Int) -> Unit)? = null
+    var cellTouched: ((Int) -> Unit)? = null
 
     val O = 0
     val X = 1
     val Empty = -1
-    var turn = X
-    var player = X
 
     private val path = Path()
     private val paint = Paint().apply {
@@ -51,30 +51,13 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
     private val points = mutableListOf<Pair<PointF, PointF>>()
     var board = IntArray(9) { Empty }
 
-    private val winCombinations = arrayOf(
-        intArrayOf(0, 1, 2), // Row 1
-        intArrayOf(3, 4, 5),
-        intArrayOf(6, 7, 8),
-        intArrayOf(0, 3, 6), // Vertical
-        intArrayOf(1, 4, 7),
-        intArrayOf(2, 5, 8),
-        intArrayOf(0, 4, 8), // Diagonal
-        intArrayOf(2, 4, 6)
-    )
-
-
-    private var isWon = false
-    private var winLineIdx = -1
-    private var winner = -1
-
-
-
+    var isWon = false
+    var winner = ""
+    var startWin = -1
+    var endWin = -1
+    var isDraw = false
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-
-        if (player != turn){
-            return true
-        }
 
         if (event?.action != MotionEvent.ACTION_DOWN) {
             return true
@@ -85,22 +68,27 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
 
         points.forEachIndexed { i, point ->
             if (x in point.first.x..point.second.x && y in point.first.y..point.second.y) {
-                cellTouched?.invoke(i)
-            }
 
+                if (board[i] == Empty) {
+                    if (!isWon && !isDraw) {
+                        cellTouched?.invoke(i)
+                    }
+                }
+
+            }
         }
         return true
     }
 
 
-
-
-
-    private fun setAt(idx: Int, isX: Boolean): Boolean {
+    fun setAt(idx: Int, isX: Boolean): Boolean {
         if (board[idx] == Empty) {
             board[idx] = if (isX) X else O
+            invalidate()
             return true
         }
+
+
 
         return false
 
@@ -173,6 +161,7 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
 
 
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -204,16 +193,21 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
         )
 
         if (isWon) {
-            val startPoint = points[winCombinations[winLineIdx][0]]
-            val endPoint = points[winCombinations[winLineIdx][2]]
-            val scx = (startPoint.first.x + startPoint.second.x) / 2
-            val scy = (startPoint.first.y + startPoint.second.y) / 2
-            val ecx = (endPoint.first.x + endPoint.second.x) / 2
-            val ecy = (endPoint.first.y + endPoint.second.y) / 2
-            canvas.drawLine(scx, scy, ecx, ecy, if (winner == X) paintX else paintO)
+            drawWinLine(startWin, endWin, if(winner == "X") paintX else paintO, canvas)
         }
 
 
+    }
+
+
+    private fun drawWinLine(from: Int, to: Int, paint: Paint, canvas: Canvas) {
+        val startPoint = points[from]
+        val endPoint = points[to]
+        val scx = (startPoint.first.x + startPoint.second.x) / 2
+        val scy = (startPoint.first.y + startPoint.second.y) / 2
+        val ecx = (endPoint.first.x + endPoint.second.x) / 2
+        val ecy = (endPoint.first.y + endPoint.second.y) / 2
+        canvas.drawLine(scx, scy, ecx, ecy, paint)
     }
 
 
@@ -242,70 +236,22 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
     }
 
 
-//    private fun playMove(x: Float, y: Float) {
-//
-//        points.forEachIndexed { i, point ->
-//            if (x in point.first.x..point.second.x && y in point.first.y..point.second.y) {
-//                val played = setAt(i, turn == X)
-//
-//
-//                val (win, pos) = checkWin()
-//
-//                if (win == Draw) {
-//                    onGameWin?.invoke(Draw)
-//                } else if (win != Empty) {
-//                    isWon = true
-//                    winLineIdx = pos
-//                    winner = win
-//                    onGameWin?.invoke(winner)
-//                } else {
-//                    if (played) {
-//                        turn = if (turn == X) O else X
-//                        onTurnChange?.invoke(turn)
-//                    }
-//                }
-//
-//
-//                invalidate()
-//            }
-//        }
-//
-//
-//    }
+    fun reset() {
+        board = IntArray(9) { Empty }
+        winner = ""
+        isWon = false
+        isDraw = false
+        startWin = -1
+        endWin = -1
+        invalidate()
+    }
 
-
-    // Returns win player and index in winCombinations
-//    private fun checkWin(): Pair<Int, Int> {
-//        for (i in winCombinations.indices) {
-//            val (a, b, c) = winCombinations[i]
-//            if (board[a] != -1 && board[a] == board[b] && board[b] == board[c]) {
-//                return if (board[a] == O) Pair(O, i) else Pair(X, i)
-//            }
-//        }
-//        var draw = true
-//        for (i in board) {
-//            if (i == Empty) {
-//                draw = false
-//                break
-//            }
-//        }
-//        if (draw) {
-//            return Pair(Draw, Draw)
-//        }
-//        return Pair(Empty, Empty) // No winner yet
-//    }
-
-
-//    fun reset() {
-//        board = IntArray(9) { Empty }
-//        turn = X
-//        winner = -1
-//        isWon = false
-//        winLineIdx = -1
-//        onTurnChange?.invoke(turn)
-//        onGameWin?.invoke(Empty)
-//        invalidate()
-//    }
+    private fun getScreenWidth() : Int{
+        val displayMetrics = DisplayMetrics();
+        (context as Activity).windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        val width = displayMetrics.widthPixels;
+        return width;
+    }
 
 }
 
