@@ -51,8 +51,9 @@ object SocketManager {
 
 
     fun disconnect() {
-        if (isConnected())
-        socket?.disconnect()
+        if (isConnected()) {
+            socket?.disconnect()
+        }
     }
 
 

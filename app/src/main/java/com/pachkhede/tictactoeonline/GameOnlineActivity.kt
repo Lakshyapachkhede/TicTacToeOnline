@@ -1,10 +1,8 @@
 package com.pachkhede.tictactoeonline
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -34,8 +32,6 @@ class GameOnlineActivity : AppCompatActivity() {
         roomId = intent.getStringExtra("id").toString()
 
         val data = JSONObject(intent.getStringExtra("data")!!)
-
-        Toast.makeText(this@GameOnlineActivity, "hello", Toast.LENGTH_SHORT).show()
 
         val player1Data = data.getJSONObject("player1")
         val player2Data = data.getJSONObject("player2")
@@ -91,6 +87,7 @@ class GameOnlineActivity : AppCompatActivity() {
             ticTacToeOnlineView.turn = turn
 
 
+
             setInfo("$turn's turn")
 
         }
@@ -100,9 +97,7 @@ class GameOnlineActivity : AppCompatActivity() {
             ticTacToeOnlineView.winner = player
             ticTacToeOnlineView.startWin = start
             ticTacToeOnlineView.endWin = end
-            runOnUiThread {
-                Toast.makeText(this@GameOnlineActivity, "$start, $end", Toast.LENGTH_SHORT).show()
-            }
+
             ticTacToeOnlineView.invalidate()
             setInfo("$player won")
         }

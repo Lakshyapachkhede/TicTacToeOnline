@@ -26,7 +26,7 @@ class RoomCreateJoinDialog : DialogFragment() {
 
     private var view: View? = null
     private var roomId = ""
-
+    private var joinRoomId = ""
 
     private var isCreateLayoutOpen = true
     private var startGameData: JSONObject? = null
@@ -87,7 +87,7 @@ class RoomCreateJoinDialog : DialogFragment() {
                                         view?.findViewById<Button>(R.id.buttonOk)?.text = "Done"
                                     }
                                     val intent = Intent(activity, GameOnlineActivity::class.java)
-                                    intent.putExtra("id", roomId)
+                                    intent.putExtra("id", if (joinRoomId == "") roomId else joinRoomId)
                                     intent.putExtra("data", startGameData?.toString())
                                     startActivity(intent)
                                     dialog?.dismiss()
@@ -138,7 +138,7 @@ class RoomCreateJoinDialog : DialogFragment() {
                         view?.findViewById<EditText>(R.id.inputRoomIdEditText)?.error =
                             "cannot join a room created by self"
                     } else {
-                        roomId = id
+                        joinRoomId = id
                         SocketManager.joinRoom(id)
                     }
                 }

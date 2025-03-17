@@ -15,9 +15,9 @@ import androidx.core.graphics.toColorInt
 
 open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    var onTurnChange : ((Int) -> Unit)? = null
-    var onGameWin : ((Int) -> Unit)? = null
-    var onPlayed : ((Int) -> Unit)? = null
+    var onTurnChange: ((Int) -> Unit)? = null
+    var onGameWin: ((Int) -> Unit)? = null
+    var onPlayed: ((Int) -> Unit)? = null
 
     var playAgainstComputer = false
 
@@ -74,6 +74,7 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
     private var winLineIdx = -1
     private var winner = -1
 
+    private var maxDepth = 2
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -126,7 +127,7 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
             borderPaint
         )
 
-        if (isWon){
+        if (isWon) {
             val startPoint = points[winCombinations[winLineIdx][0]]
             val endPoint = points[winCombinations[winLineIdx][2]]
             val scx = (startPoint.first.x + startPoint.second.x) / 2
@@ -165,7 +166,7 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
 
-    private fun setAt(idx: Int, isX: Boolean) : Boolean{
+    private fun setAt(idx: Int, isX: Boolean): Boolean {
         if (board[idx] == Empty) {
             board[idx] = if (isX) X else O
             onPlayed?.invoke(idx)
@@ -240,58 +241,48 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
 
         points.forEachIndexed { i, point ->
             if (x in point.first.x..point.second.x && y in point.first.y..point.second.y) {
-                val played = setAt(i, turn == X)
+                if (setAt(i, turn == X)) {
 
+                    val (win, pos) = checkWin()
 
-                val (win, pos) = checkWin()
+                    if (win == Draw) {
+                        onGameWin?.invoke(Draw)
+                    } else if (win != Empty) {
+                        isWon = true
+                        winLineIdx = pos
+                        winner = win
+                        onGameWin?.invoke(winner)
+                    } else {
 
-                if (win == Draw) {
-                    onGameWin?.invoke(Draw)
-                }
-
-                else if (win != Empty){
-                    isWon = true
-                    winLineIdx = pos
-                    winner = win
-                    onGameWin?.invoke(winner)
-                }
-                else  {
-                    if (played) {
                         turn = if (turn == X) O else X
                         onTurnChange?.invoke(turn)
 
-                        if (playAgainstComputer) {
-                            setAt(randomFreeSpot(), turn == X)
+                        if (playAgainstComputer && turn == O) {
+                            val aiMove = bestMove()
+                            setAt(aiMove, false)
 
-                            val (win, pos) = checkWin()
+                            val (winAi, posAi) = checkWin()
 
-                            if (win == Draw) {
+                            if (winAi == Draw) {
                                 onGameWin?.invoke(Draw)
-                            }
-
-                            else if (win != Empty){
+                            } else if (winAi != Empty) {
                                 isWon = true
-                                winLineIdx = pos
-                                winner = win
+                                winLineIdx = posAi
+                                winner = winAi
                                 onGameWin?.invoke(winner)
-                            }else{
+                            } else {
                                 turn = if (turn == X) O else X
                                 onTurnChange?.invoke(turn)
                             }
 
-
                         }
 
                     }
-
+                    invalidate()
 
                 }
-
-
-                invalidate()
             }
         }
-
 
     }
 
@@ -301,12 +292,12 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
         for (i in winCombinations.indices) {
             val (a, b, c) = winCombinations[i]
             if (board[a] != -1 && board[a] == board[b] && board[b] == board[c]) {
-                return if (board[a] == O) Pair(O,i) else Pair(X,i)
+                return if (board[a] == O) Pair(O, i) else Pair(X, i)
             }
         }
         var draw = true
-        for (i in board){
-            if (i == Empty){
+        for (i in board) {
+            if (i == Empty) {
                 draw = false
                 break
             }
@@ -316,8 +307,6 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
         }
         return Pair(Empty, Empty) // No winner yet
     }
-
-
 
 
     fun reset() {
@@ -331,15 +320,81 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
         invalidate()
     }
 
-    private fun randomFreeSpot() : Int{
+    private fun randomFreeSpot(): Int {
         val freeList = mutableListOf<Int>()
-        for (cell in board.indices){
-            if (board[cell] == Empty){
+        for (cell in board.indices) {
+            if (board[cell] == Empty) {
                 freeList.add(cell)
             }
         }
         return freeList.random()
 
+    }
+
+    private fun minimax(
+        board: IntArray,
+        depth: Int,
+        alpha: Int,
+        beta: Int,
+        isMaximizing: Boolean
+    ): Int {
+        val (win, _) = checkWin()
+
+        // Base cases: return score if the game is over
+        if (win == O) return 10 - depth  // AI (O) wins
+        if (win == X) return depth - 10  // Human (X) wins
+        if (!board.contains(Empty)) return 0  // Draw
+        if (depth >= maxDepth) return 0
+
+        var alphaVar = alpha
+        var betaVar = beta
+
+        if (isMaximizing) {
+            var bestScore = Int.MIN_VALUE
+            for (i in board.indices) {
+                if (board[i] == Empty) {
+                    board[i] = O
+                    val score = minimax(board, depth + 1, alphaVar, betaVar, false)
+                    board[i] = Empty
+                    bestScore = maxOf(bestScore, score)
+                    alphaVar = maxOf(alphaVar, bestScore)
+                    if (betaVar <= alphaVar) break // Prune
+                }
+            }
+            return bestScore
+        } else {
+            var bestScore = Int.MAX_VALUE
+            for (i in board.indices) {
+                if (board[i] == Empty) {
+                    board[i] = X
+                    val score = minimax(board, depth + 1, alphaVar, betaVar, true)
+                    board[i] = Empty
+                    bestScore = minOf(bestScore, score)
+                    betaVar = minOf(betaVar, bestScore)
+                    if (betaVar <= alphaVar) break // Prune
+                }
+            }
+            return bestScore
+        }
+    }
+
+    // Find the best move for AI using Alpha-Beta pruning
+    private fun bestMove(): Int {
+        var bestScore = Int.MIN_VALUE
+        var move = -1
+
+        for (i in board.indices) {
+            if (board[i] == Empty) {
+                board[i] = O
+                val score = minimax(board, 0, Int.MIN_VALUE, Int.MAX_VALUE, false)
+                board[i] = Empty
+                if (score > bestScore) {
+                    bestScore = score
+                    move = i
+                }
+            }
+        }
+        return move
     }
 
 

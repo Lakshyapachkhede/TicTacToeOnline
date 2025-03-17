@@ -35,7 +35,9 @@
                 android:text="Tic"
                 android:textColor="#00BCD4"
                 android:textSize="60sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:includeFontPadding="false"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -44,7 +46,8 @@
                 android:text="Tac"
                 android:textColor="#FFC107"
                 android:textSize="60sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+            android:includeFontPadding="false"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,7 +56,8 @@
                 android:text="Toe"
                 android:textColor="#E91E63"
                 android:textSize="60sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:includeFontPadding="false"/>
 
         </LinearLayout>
 
