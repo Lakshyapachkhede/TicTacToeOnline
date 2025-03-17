@@ -19,6 +19,8 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
     var onGameWin : ((Int) -> Unit)? = null
     var onPlayed : ((Int) -> Unit)? = null
 
+    var playAgainstComputer = false
+
 
     val O = 0
     val X = 1
@@ -253,12 +255,36 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
                     winner = win
                     onGameWin?.invoke(winner)
                 }
-
                 else  {
                     if (played) {
                         turn = if (turn == X) O else X
                         onTurnChange?.invoke(turn)
+
+                        if (playAgainstComputer) {
+                            setAt(randomFreeSpot(), turn == X)
+
+                            val (win, pos) = checkWin()
+
+                            if (win == Draw) {
+                                onGameWin?.invoke(Draw)
+                            }
+
+                            else if (win != Empty){
+                                isWon = true
+                                winLineIdx = pos
+                                winner = win
+                                onGameWin?.invoke(winner)
+                            }else{
+                                turn = if (turn == X) O else X
+                                onTurnChange?.invoke(turn)
+                            }
+
+
+                        }
+
                     }
+
+
                 }
 
 
@@ -304,5 +330,17 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
         onGameWin?.invoke(Empty)
         invalidate()
     }
+
+    private fun randomFreeSpot() : Int{
+        val freeList = mutableListOf<Int>()
+        for (cell in board.indices){
+            if (board[cell] == Empty){
+                freeList.add(cell)
+            }
+        }
+        return freeList.random()
+
+    }
+
 
 }

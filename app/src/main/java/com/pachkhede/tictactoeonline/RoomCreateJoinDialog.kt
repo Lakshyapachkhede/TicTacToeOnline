@@ -27,6 +27,7 @@ class RoomCreateJoinDialog : DialogFragment() {
     private var view: View? = null
     private var roomId = ""
 
+
     private var isCreateLayoutOpen = true
     private var startGameData: JSONObject? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -132,14 +133,13 @@ class RoomCreateJoinDialog : DialogFragment() {
                 if (!isCreateLayoutOpen) {
                     val id = view?.findViewById<EditText>(R.id.inputRoomIdEditText)?.text.toString()
                         .trim()
-                    Toast.makeText(context, id, Toast.LENGTH_SHORT).show()
+
                     if (id == roomId) {
                         view?.findViewById<EditText>(R.id.inputRoomIdEditText)?.error =
                             "cannot join a room created by self"
                     } else {
                         roomId = id
                         SocketManager.joinRoom(id)
-
                     }
                 }
             }

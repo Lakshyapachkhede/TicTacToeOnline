@@ -45,14 +45,17 @@ object SocketManager {
         connectionCallback = callback
         socket?.connect()
     }
-
-    fun disconnect() {
-        socket?.disconnect()
-    }
-
     fun isConnected(): Boolean {
         return socket?.connected() ?: false
     }
+
+
+    fun disconnect() {
+        if (isConnected())
+        socket?.disconnect()
+    }
+
+
 
     fun createUser(name: String, image: String) {
         val json = JSONObject()

@@ -72,12 +72,14 @@ class GameOnlineActivity : AppCompatActivity() {
         }
 
         ticTacToeOnlineView.board = IntArray(9) { ticTacToeOnlineView.Empty }
+        ticTacToeOnlineView.mplayer = player
         setInfo("$turn's turn")
 
 
         ticTacToeOnlineView.cellTouched = { i ->
-            Toast.makeText(this@GameOnlineActivity, "$i", Toast.LENGTH_SHORT).show()
+
                 if (turn == player){
+                    ticTacToeOnlineView.setAt(i, player == "X")
                     SocketManager.playMove(roomId, i, player)
             }
 
@@ -86,6 +88,7 @@ class GameOnlineActivity : AppCompatActivity() {
         SocketManager.setMovePlayedListener { index, played_by->
             ticTacToeOnlineView.setAt(index, played_by == "X")
             turn = if (played_by == "X") "O" else "X"
+            ticTacToeOnlineView.turn = turn
 
 
             setInfo("$turn's turn")
@@ -97,7 +100,10 @@ class GameOnlineActivity : AppCompatActivity() {
             ticTacToeOnlineView.winner = player
             ticTacToeOnlineView.startWin = start
             ticTacToeOnlineView.endWin = end
-
+            runOnUiThread {
+                Toast.makeText(this@GameOnlineActivity, "$start, $end", Toast.LENGTH_SHORT).show()
+            }
+            ticTacToeOnlineView.invalidate()
             setInfo("$player won")
         }
 

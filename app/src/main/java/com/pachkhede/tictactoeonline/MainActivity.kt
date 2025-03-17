@@ -26,12 +26,20 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
             startActivity(intent)
         }
 
+        findViewById<Button>(R.id.btnVsComputer).setOnClickListener {
+            val intent = Intent(this@MainActivity, GameActivity::class.java)
+            intent.putExtra("computer", true)
+            startActivity(intent)
+        }
+
 
         findViewById<Button>(R.id.btnOnline).setOnClickListener {
-            val dialog = RoomCreateJoinDialog()
-            dialog.isCancelable = false
-            dialog.show(supportFragmentManager, "Create or join Room")
-
+            val existingDialog = supportFragmentManager.findFragmentByTag("Create or join Room")
+            if (existingDialog == null) {
+                val dialog = RoomCreateJoinDialog()
+                dialog.isCancelable = false
+                dialog.show(supportFragmentManager, "Create or join Room")
+            }
         }
 
         findViewById<ImageView>(R.id.user).setOnClickListener {

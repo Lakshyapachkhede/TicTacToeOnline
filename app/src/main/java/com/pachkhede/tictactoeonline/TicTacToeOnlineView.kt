@@ -22,6 +22,9 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
     val X = 1
     val Empty = -1
 
+    var turn = "X"
+    var mplayer = "X"
+
     private val path = Path()
     private val paint = Paint().apply {
         strokeWidth = 8f
@@ -69,8 +72,9 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
         points.forEachIndexed { i, point ->
             if (x in point.first.x..point.second.x && y in point.first.y..point.second.y) {
 
-                if (board[i] == Empty) {
+                if (board[i] == Empty && turn == mplayer) {
                     if (!isWon && !isDraw) {
+                        turn = if (turn == "X") "O" else "X"
                         cellTouched?.invoke(i)
                     }
                 }
@@ -243,6 +247,7 @@ class TicTacToeOnlineView(context: Context, attributeSet: AttributeSet) :
         isDraw = false
         startWin = -1
         endWin = -1
+        turn = "X"
         invalidate()
     }
 

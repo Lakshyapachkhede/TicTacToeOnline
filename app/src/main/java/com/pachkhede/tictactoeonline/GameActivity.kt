@@ -22,7 +22,17 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val againstComputer = intent.getBooleanExtra("computer", false)
+
+        if(againstComputer){
+            setPlayerRightInfo("computer", "robot", "o")
+        }
+
+
         val ticTacToeView = findViewById<TicTacToeView>(R.id.ticTacToeView)
+        ticTacToeView.playAgainstComputer = againstComputer
+
 
         val gameInfoTextView = findViewById<TextView>(R.id.gameInfoTextView)
 
@@ -57,9 +67,11 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
 
         findViewById<LinearLayout>(R.id.playerInfo2).setOnClickListener {
-            val dialog = ProfileSelectDialog(ProfileSelectDialog.defaultList)
-            dialog.show(supportFragmentManager, "update profile")
 
+            if (!againstComputer) {
+                val dialog = ProfileSelectDialog(ProfileSelectDialog.defaultList)
+                dialog.show(supportFragmentManager, "update profile")
+            }
         }
 
         val sharedPref = getSharedPreferences(getString(R.string.shared_pref_main), Context.MODE_PRIVATE)
@@ -80,5 +92,16 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
     }
 
+
+    fun setPlayerRightInfo(name: String, img: String, mark: String) {
+        findViewById<TextView>(R.id.playerName2).text = name
+        findViewById<ImageView>(R.id.playerImage2).setImageResource(getImageIdFromName(img))
+        findViewById<ImageView>(R.id.playerMark2).setImageResource(getImageIdFromName(mark))
+
+    }
+
+    private fun getImageIdFromName(id: String): Int {
+        return resources.getIdentifier(id, "drawable", packageName)
+    }
 
 }
