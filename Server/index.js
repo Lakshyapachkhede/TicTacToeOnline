@@ -64,13 +64,11 @@ function checkWin(board) {
 
 io.on("connection", (socket) => {
 
-    console.log(`new client ${socket.id}`);
     usersOnline = usersOnline + 1;
 
     socket.on("create_user", (data) => {
         users[socket.id] = { name: data.name, image: data.image, room: "" }
-        console.log(data);
-        console.log(usersOnline);
+
     });
 
     socket.on("create_room", () => {
@@ -79,8 +77,7 @@ io.on("connection", (socket) => {
         users[socket.id].room = id
         rooms[id] = { player1: socket.id, player2: null, board: [], turn: "x" };
         socket.join(id);
-        console.log("room created by", users[socket.id]);
-        console.log("room id by", users[socket.id].name, "is", id)
+
 
         io.to(id).emit("room_created", { id: id });
     });
@@ -93,7 +90,7 @@ io.on("connection", (socket) => {
 
         }
         else {
-            console.log("room join id by", users[socket.id].name, "is", id)
+
             if (rooms[id].player2 == null) {
                 users[socket.id].mark = "o";
                 users[socket.id].room = id
@@ -102,12 +99,11 @@ io.on("connection", (socket) => {
 
                 socket.join(id);
 
-                console.log("room joined by", users[socket.id]);
-                console.log(rooms[id])
+
 
                 io.to(id).emit("user_joined", users[socket.id]);
                 let data = { "player1": { id: rooms[id].player1, ...users[rooms[id].player1] }, "player2": { id: rooms[id].player2, ...users[rooms[id].player2] } }
-                console.log(data);
+      
                 io.to(id).emit("start_game", data);
             }
         }
@@ -115,15 +111,15 @@ io.on("connection", (socket) => {
 
 
     socket.on("play_move", (data) => {
-        console.log("play_move", data)
+
         let id = data["id"]
         room = rooms[id]
         if (room != undefined) {
-            console.log("play_move", room)
+
             room.board[data["index"]] = data["player"]
 
             let sendData = { "index": data['index'], "player": data["player"] }
-            console.log("senddata", sendData)
+
             io.to(id).emit("move_played", sendData)
 
             room.turn = (data["player"] == 'x') ? 'o' : 'x'
@@ -135,7 +131,7 @@ io.on("connection", (socket) => {
             }
             else if (win != -1) {
                 let data = { "winner": room.board[winCombinations[win][0]], "start": winCombinations[win][0], "end": winCombinations[win][2] }
-                console.log(data);
+
                 io.to(id).emit("win", data)
             }
         }
@@ -146,7 +142,7 @@ io.on("connection", (socket) => {
 
 
     socket.on("disconnect", () => {
-        console.log("User Disconnected", users[socket.id])
+
 
         io.to(users[socket.id].room).emit("user_disconnect", users[socket.id]);
 
@@ -155,7 +151,6 @@ io.on("connection", (socket) => {
         delete users[socket.id]
 
         usersOnline = usersOnline - 1;
-        console.log(usersOnline);
 
     });
 
