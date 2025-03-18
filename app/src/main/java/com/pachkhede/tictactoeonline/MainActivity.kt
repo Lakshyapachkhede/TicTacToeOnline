@@ -9,8 +9,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView
+
+private fun AdRequest.Builder.addTestDevice(string: String) {}
 
 class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
+
+    private var adView : AdView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -20,6 +28,14 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        adView = findViewById<AdView>(R.id.ad_banner_main)
+        MobileAds.initialize(this);
+        val adRequest = AdRequest.Builder()
+            .build()
+
+        adView?.loadAd(adRequest)
+
 
         findViewById<Button>(R.id.btnTwoPlayer).setOnClickListener {
             val intent = Intent(this@MainActivity, GameActivity::class.java)

@@ -74,7 +74,7 @@ open class TicTacToeView(context: Context, attrs: AttributeSet) : View(context, 
     private var winLineIdx = -1
     private var winner = -1
 
-    private var maxDepth = 2
+    private var maxDepth = 3
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)

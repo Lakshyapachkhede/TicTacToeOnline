@@ -53,13 +53,35 @@
                 />
 
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/x"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                />
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/x"
+
+                    />
+
+                <TextView
+                    android:id="@+id/player1WonNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=": 0"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    />
+
+            </LinearLayout>
+
+
+
         </LinearLayout>
 
         <TextView
@@ -108,14 +130,34 @@
 
 
 
-            <ImageView
-                android:id="@+id/playerMark2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/o"
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                />
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:id="@+id/playerMark2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/o"
+                    />
+
+                <TextView
+                    android:id="@+id/player2WonNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=": 0"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -147,9 +189,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gameInfoTextView"
-        app:layout_constraintBottom_toTopOf="@id/bottomButtons"
+        app:layout_constraintBottom_toTopOf="@id/banner_ad_game"
         />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/banner_ad_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtons"
+        app:layout_constraintTop_toBottomOf="@id/ticTacToeView"
+        app:adSize="BANNER"
+        app:adUnitId="@string/ad_test"
+
+        />
 
     <LinearLayout
         android:id="@+id/bottomButtons"
@@ -159,7 +211,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintTop_toBottomOf="@id/ticTacToeView"
+        app:layout_constraintTop_toBottomOf="@id/banner_ad_game"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView

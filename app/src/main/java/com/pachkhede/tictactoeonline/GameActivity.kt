@@ -2,17 +2,34 @@ package com.pachkhede.tictactoeonline
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import org.w3c.dom.Text
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+
 
 class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
+
+    private var interstitialAd: InterstitialAd? = null
+    private var backPressed = 0;
+    private lateinit var sharedPref: SharedPreferences
+    private lateinit var adView: AdView
+    private var p1Won = 0
+    private var p2Won = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,9 +40,39 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
             insets
         }
 
+        sharedPref = getSharedPreferences(getString(R.string.shared_pref_game), MODE_PRIVATE)
+        backPressed = sharedPref.getInt("back_pressed_game", 0)
+
+
+
+
+        MobileAds.initialize(this)
+        val adRequest = AdRequest.Builder().build()
+
+        adView = findViewById<AdView>(R.id.banner_ad_game)
+        adView.loadAd(adRequest)
+
+
+
+        InterstitialAd.load(
+            this, getString(R.string.ad_inter_test), adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialAd = ad
+                    Toast.makeText(this@GameActivity, "loaded", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    interstitialAd = null
+                    Toast.makeText(this@GameActivity, "failed", Toast.LENGTH_SHORT).show()
+
+                }
+            })
+
+
         val againstComputer = intent.getBooleanExtra("computer", false)
 
-        if(againstComputer){
+        if (againstComputer) {
             setPlayerRightInfo("computer", "robot", "o")
         }
 
@@ -37,31 +84,43 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
         val gameInfoTextView = findViewById<TextView>(R.id.gameInfoTextView)
 
 
-        ticTacToeView.onTurnChange = {turn->
-            if (turn == ticTacToeView.X){
+        ticTacToeView.onTurnChange = { turn ->
+            if (turn == ticTacToeView.X) {
                 gameInfoTextView.text = "X's Turn"
             } else {
                 gameInfoTextView.text = "O's Turn"
             }
         }
 
-        ticTacToeView.onGameWin = {win ->
-            if (win == ticTacToeView.Draw){
+        ticTacToeView.onGameWin = { win ->
+            if (win == ticTacToeView.Draw) {
                 gameInfoTextView.text = "It's a draw"
-            } else if (win != ticTacToeView.Empty){
-                val winner = if (win == ticTacToeView.X) "X" else "O"
+            } else if (win != ticTacToeView.Empty) {
+
+                var winner = ""
+                if (win == ticTacToeView.X) {
+                    winner = "X"
+                    p1Won++
+                    updateScore(true)
+                } else {
+                    winner = "O"
+                    p2Won++
+                    updateScore(false)
+                }
+
                 gameInfoTextView.text = "$winner won"
+
 
             }
 
         }
 
 
-        findViewById<ImageView>(R.id.reset).setOnClickListener{
+        findViewById<ImageView>(R.id.reset).setOnClickListener {
             ticTacToeView.reset()
         }
 
-        findViewById<ImageView>(R.id.back).setOnClickListener{
+        findViewById<ImageView>(R.id.back).setOnClickListener {
             onBackPressed()
         }
 
@@ -74,7 +133,8 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
             }
         }
 
-        val sharedPref = getSharedPreferences(getString(R.string.shared_pref_main), Context.MODE_PRIVATE)
+        val sharedPref =
+            getSharedPreferences(getString(R.string.shared_pref_main), Context.MODE_PRIVATE)
         val name = sharedPref.getString(getString(R.string.profileName), "Player1")
         val img = sharedPref.getString(getString(R.string.profileImg), "a")
 
@@ -102,6 +162,42 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
     private fun getImageIdFromName(id: String): Int {
         return resources.getIdentifier(id, "drawable", packageName)
+    }
+
+
+    override fun onBackPressed() {
+
+        if (interstitialAd != null && backPressed == 2) {
+            interstitialAd?.show(this)
+            interstitialAd = null
+            super.onBackPressed()
+            putBackPressed(0)
+        } else {
+
+            super.onBackPressed()
+            putBackPressed(backPressed + 1)
+
+        }
+
+
+    }
+
+    private fun putBackPressed(n: Int) {
+        with(sharedPref.edit()) {
+            putInt("back_pressed_game", n)
+            commit()
+
+        }
+    }
+
+
+    private fun updateScore(isPlayer1 : Boolean){
+        if(isPlayer1){
+            findViewById<TextView>(R.id.player1WonNumber).text = ": " + p1Won.toString()
+        } else{
+            findViewById<TextView>(R.id.player2WonNumber).text = ": " + p2Won.toString()
+
+        }
     }
 
 }

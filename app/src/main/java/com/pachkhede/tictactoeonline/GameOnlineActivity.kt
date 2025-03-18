@@ -1,12 +1,21 @@
 package com.pachkhede.tictactoeonline
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.pachkhede.tictactoeonline.GameActivity
 import org.json.JSONObject
 
 class GameOnlineActivity : AppCompatActivity() {
@@ -15,6 +24,12 @@ class GameOnlineActivity : AppCompatActivity() {
     private var opponent = "O"
     private var turn = player
     private var roomId = ""
+    private lateinit var adView: AdView
+    private var interstitialAd: InterstitialAd? = null
+    private lateinit var sharedPref: SharedPreferences
+    private var backPressed = 0;
+    private var pWon = 0
+    private var oWon = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +41,32 @@ class GameOnlineActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
+        MobileAds.initialize(this)
+        val adRequest = AdRequest.Builder().build()
+
+        adView = findViewById<AdView>(R.id.banner_ad_online)
+        adView.loadAd(adRequest)
+
+        sharedPref = getSharedPreferences(getString(R.string.shared_pref_game), MODE_PRIVATE)
+        backPressed = sharedPref.getInt("back_pressed_online", 0)
+
+        InterstitialAd.load(
+            this, getString(R.string.ad_inter_test), adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialAd = ad
+                    Toast.makeText(this@GameOnlineActivity, "loaded", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    interstitialAd = null
+                    Toast.makeText(this@GameOnlineActivity, "failed", Toast.LENGTH_SHORT).show()
+
+                }
+            })
+
 
         val ticTacToeOnlineView = findViewById<TicTacToeOnlineView>(R.id.ticTacToeView)
 
@@ -74,14 +115,14 @@ class GameOnlineActivity : AppCompatActivity() {
 
         ticTacToeOnlineView.cellTouched = { i ->
 
-                if (turn == player){
-                    ticTacToeOnlineView.setAt(i, player == "X")
-                    SocketManager.playMove(roomId, i, player)
+            if (turn == player) {
+                ticTacToeOnlineView.setAt(i, player == "X")
+                SocketManager.playMove(roomId, i, player)
             }
 
         }
 
-        SocketManager.setMovePlayedListener { index, played_by->
+        SocketManager.setMovePlayedListener { index, played_by ->
             ticTacToeOnlineView.setAt(index, played_by == "X")
             turn = if (played_by == "X") "O" else "X"
             ticTacToeOnlineView.turn = turn
@@ -92,14 +133,27 @@ class GameOnlineActivity : AppCompatActivity() {
 
         }
 
-        SocketManager.setWinListener { player, start, end->
+        SocketManager.setWinListener { player, start, end ->
             ticTacToeOnlineView.isWon = true
             ticTacToeOnlineView.winner = player
             ticTacToeOnlineView.startWin = start
             ticTacToeOnlineView.endWin = end
 
             ticTacToeOnlineView.invalidate()
+
+
+            val isCurrPlayerWon = (player == this@GameOnlineActivity.player)
+            if (isCurrPlayerWon){
+                pWon++
+                updateScore(true)
+            } else {
+                oWon++
+                updateScore(false)
+            }
+
             setInfo("$player won")
+
+
         }
 
 
@@ -162,19 +216,52 @@ class GameOnlineActivity : AppCompatActivity() {
     }
 
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        SocketManager.disconnect()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         SocketManager.disconnect()
     }
 
-    private fun setInfo(message : String){
+    private fun setInfo(message: String) {
         runOnUiThread {
             findViewById<TextView>(R.id.gameInfoTextView).text = message
+        }
+    }
+
+
+    override fun onBackPressed() {
+
+        if (interstitialAd != null && backPressed == 2) {
+            interstitialAd?.show(this)
+            interstitialAd = null
+            super.onBackPressed()
+            putBackPressed(0)
+        } else {
+
+            super.onBackPressed()
+            putBackPressed(backPressed + 1)
+
+        }
+
+        SocketManager.disconnect()
+    }
+
+    private fun putBackPressed(n: Int) {
+        with(sharedPref.edit()) {
+            putInt("back_pressed_online", n)
+            commit()
+
+        }
+    }
+
+
+    private fun updateScore(isPlayerWon : Boolean){
+        runOnUiThread {
+            if (isPlayerWon) {
+                findViewById<TextView>(R.id.player1WonNumber).text = ": " + pWon.toString()
+            } else {
+                findViewById<TextView>(R.id.player2WonNumber).text = ": " + oWon.toString()
+
+            }
         }
     }
 
