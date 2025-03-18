@@ -5,12 +5,16 @@
     <string name="shared_pref_main">com.pachkhede.tictactoeonline.main_activity</string>
     <string name="shared_pref_game">com.pachkhede.tictactoeonline.game_activity</string>
     <string name="app_ad_id">ca-app-pub-8407945309336421~9551568296</string>
+
+
     <string name="ad_banner_main_id">ca-app-pub-8407945309336421/6509675821</string>
-    <string name="ad_banner_game_id">ca-app-pub-8407945309336421/3576685871</string>
-    <string name="ad_banner_online_id">ca-app-pub-8407945309336421/1618110099</string>
-    <string name="ad_test">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="ad_inter_test">ca-app-pub-3940256099942544/1033173712</string>
+
     <string name="two_player_inter">ca-app-pub-8407945309336421/2384929689</string>
     <string name="online_inter">ca-app-pub-8407945309336421/2308375232</string>
+    <string name="main_inter">ca-app-pub-8407945309336421/4357584389s</string>
+
+
+    <string name="ad_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_inter_test">ca-app-pub-3940256099942544/1033173712</string>
 
 </resources>

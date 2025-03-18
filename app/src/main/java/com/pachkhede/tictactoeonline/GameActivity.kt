@@ -25,7 +25,6 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
     private var interstitialAd: InterstitialAd? = null
     private var backPressed = 0;
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var adView: AdView
     private var p1Won = 0
     private var p2Won = 0
 
@@ -49,23 +48,16 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
 
-        adView = findViewById<AdView>(R.id.banner_ad_game)
-        adView.loadAd(adRequest)
-
-
 
         InterstitialAd.load(
             this, getString(R.string.ad_inter_test), adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
-                    Toast.makeText(this@GameActivity, "loaded", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     interstitialAd = null
-                    Toast.makeText(this@GameActivity, "failed", Toast.LENGTH_SHORT).show()
-
                 }
             })
 
@@ -167,7 +159,7 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
     override fun onBackPressed() {
 
-        if (interstitialAd != null && backPressed == 2) {
+        if (interstitialAd != null && backPressed > 2) {
             interstitialAd?.show(this)
             interstitialAd = null
             super.onBackPressed()

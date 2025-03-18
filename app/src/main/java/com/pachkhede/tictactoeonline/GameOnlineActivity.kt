@@ -24,7 +24,6 @@ class GameOnlineActivity : AppCompatActivity() {
     private var opponent = "O"
     private var turn = player
     private var roomId = ""
-    private lateinit var adView: AdView
     private var interstitialAd: InterstitialAd? = null
     private lateinit var sharedPref: SharedPreferences
     private var backPressed = 0;
@@ -46,8 +45,6 @@ class GameOnlineActivity : AppCompatActivity() {
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
 
-        adView = findViewById<AdView>(R.id.banner_ad_online)
-        adView.loadAd(adRequest)
 
         sharedPref = getSharedPreferences(getString(R.string.shared_pref_game), MODE_PRIVATE)
         backPressed = sharedPref.getInt("back_pressed_online", 0)
@@ -230,7 +227,7 @@ class GameOnlineActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        if (interstitialAd != null && backPressed == 2) {
+        if (interstitialAd != null && backPressed > 2) {
             interstitialAd?.show(this)
             interstitialAd = null
             super.onBackPressed()
