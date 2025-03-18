@@ -1,21 +1,18 @@
 package com.pachkhede.tictactoeonline
 
-import android.content.SharedPreferences
+
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.pachkhede.tictactoeonline.GameActivity
 import org.json.JSONObject
 
 class GameOnlineActivity : AppCompatActivity() {
@@ -25,8 +22,6 @@ class GameOnlineActivity : AppCompatActivity() {
     private var turn = player
     private var roomId = ""
     private var interstitialAd: InterstitialAd? = null
-    private lateinit var sharedPref: SharedPreferences
-    private var backPressed = 0;
     private var pWon = 0
     private var oWon = 0
 
@@ -43,26 +38,6 @@ class GameOnlineActivity : AppCompatActivity() {
 
 
         MobileAds.initialize(this)
-        val adRequest = AdRequest.Builder().build()
-
-
-        sharedPref = getSharedPreferences(getString(R.string.shared_pref_game), MODE_PRIVATE)
-        backPressed = sharedPref.getInt("back_pressed_online", 0)
-
-        InterstitialAd.load(
-            this, getString(R.string.ad_inter_test), adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(ad: InterstitialAd) {
-                    interstitialAd = ad
-                    Toast.makeText(this@GameOnlineActivity, "loaded", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    interstitialAd = null
-                    Toast.makeText(this@GameOnlineActivity, "failed", Toast.LENGTH_SHORT).show()
-
-                }
-            })
 
 
         val ticTacToeOnlineView = findViewById<TicTacToeOnlineView>(R.id.ticTacToeView)
@@ -181,7 +156,7 @@ class GameOnlineActivity : AppCompatActivity() {
         }
 
 
-
+        loadAd()
 
         findViewById<ImageView>(R.id.reset).setOnClickListener {
             SocketManager.reset(roomId)
@@ -227,28 +202,18 @@ class GameOnlineActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        if (interstitialAd != null && backPressed > 2) {
+        if (interstitialAd != null) {
             interstitialAd?.show(this)
             interstitialAd = null
             super.onBackPressed()
-            putBackPressed(0)
+
         } else {
-
             super.onBackPressed()
-            putBackPressed(backPressed + 1)
-
         }
 
         SocketManager.disconnect()
     }
 
-    private fun putBackPressed(n: Int) {
-        with(sharedPref.edit()) {
-            putInt("back_pressed_online", n)
-            commit()
-
-        }
-    }
 
 
     private fun updateScore(isPlayerWon : Boolean){
@@ -260,6 +225,25 @@ class GameOnlineActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun loadAd(){
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            this, getString(R.string.ad_inter_test), adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialAd = ad
+
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    interstitialAd = null
+
+
+                }
+            })
     }
 
 }

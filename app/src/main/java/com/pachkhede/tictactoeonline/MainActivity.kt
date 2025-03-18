@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
+
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,7 +18,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.pachkhede.tictactoeonline.GameOnlineActivity
+
 
 class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
 
@@ -66,25 +66,23 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
 
                 val dialog = RoomCreateJoinDialog()
                 dialog.isCancelable = false
+                dialog.show(supportFragmentManager, "Create or join Room")
 
                 if(interstitialAd != null){
 
                     interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
                         override fun onAdDismissedFullScreenContent() {
-                            dialog.show(supportFragmentManager, "Create or join Room")
                             loadAd()
                         }
 
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             interstitialAd = null
-                            dialog.show(supportFragmentManager, "Create or join Room")
+
                         }
 
                     }
                     interstitialAd?.show(this@MainActivity)
-                } else {
-                    dialog.show(supportFragmentManager, "Create or join Room")
                 }
             }
         }
@@ -111,7 +109,7 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
     }
 
     private fun showAdBeforeNavigating(intent: Intent) {
-        if (interstitialAd != null && clickTimes > 2) {
+        if (interstitialAd != null && clickTimes > 1) {
             interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
 
@@ -135,12 +133,12 @@ class MainActivity : AppCompatActivity() ,ProfileSelectDialog.InputListener {
         InterstitialAd.load(this, getString(R.string.ad_inter_test), adRequest, object : InterstitialAdLoadCallback(){
             override fun onAdLoaded(ad: InterstitialAd) {
                 interstitialAd = ad
-                Toast.makeText(this@MainActivity, "loaded", Toast.LENGTH_SHORT).show()
+
             }
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 interstitialAd = null
-                Toast.makeText(this@MainActivity, "failed", Toast.LENGTH_SHORT).show()
+
 
             }
         })

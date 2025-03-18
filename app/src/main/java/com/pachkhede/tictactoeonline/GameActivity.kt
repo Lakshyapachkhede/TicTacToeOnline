@@ -1,13 +1,13 @@
 package com.pachkhede.tictactoeonline
 
-import android.annotation.SuppressLint
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
+
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
@@ -39,27 +38,11 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
             insets
         }
 
+        MobileAds.initialize(this)
+
+
         sharedPref = getSharedPreferences(getString(R.string.shared_pref_game), MODE_PRIVATE)
         backPressed = sharedPref.getInt("back_pressed_game", 0)
-
-
-
-
-        MobileAds.initialize(this)
-        val adRequest = AdRequest.Builder().build()
-
-
-        InterstitialAd.load(
-            this, getString(R.string.ad_inter_test), adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(ad: InterstitialAd) {
-                    interstitialAd = ad
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    interstitialAd = null
-                }
-            })
 
 
         val againstComputer = intent.getBooleanExtra("computer", false)
@@ -107,6 +90,7 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
         }
 
+        loadAd()
 
         findViewById<ImageView>(R.id.reset).setOnClickListener {
             ticTacToeView.reset()
@@ -134,6 +118,9 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
         findViewById<ImageView>(R.id.playerImage1).setImageResource(imgId)
         findViewById<TextView>(R.id.playerName1).text = name
+
+
+
 
     }
 
@@ -191,5 +178,23 @@ class GameActivity : AppCompatActivity(), ProfileSelectDialog.InputListener {
 
         }
     }
+
+    private fun loadAd(){
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            this, getString(R.string.ad_inter_test), adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialAd = ad
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    interstitialAd = null
+                }
+            })
+
+    }
+
 
 }
