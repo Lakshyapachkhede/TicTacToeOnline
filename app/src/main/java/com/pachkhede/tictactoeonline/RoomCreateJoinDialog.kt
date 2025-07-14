@@ -25,6 +25,7 @@ class RoomCreateJoinDialog : DialogFragment() {
 
     private var isCreateLayoutOpen = true
     private var startGameData: JSONObject? = null
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
 
